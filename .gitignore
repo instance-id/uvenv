@@ -6,3 +6,4 @@ dist/
 .vscode/
 package-lock.json
 .history/
+general_tests/

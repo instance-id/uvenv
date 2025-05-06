@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ -z "${UVENV_ROOT}" ]; then
+  UVENV_ROOT="${HOME}/.uvenv"
+else
+  UVENV_ROOT="${UVENV_ROOT%/}"
+fi
+export UVENV_ROOT
+
+if [ -z "${UVENV_DIR}" ]; then
+  UVENV_DIR="$PWD"
+fi
+
+if [ ! -d "$UVENV_DIR" ] || [ ! -e "$UVENV_DIR" ]; then
+  abort "cannot change working directory to \`$UVENV_DIR'"
+fi
+
+UVENV_DIR=$(cd "$UVENV_DIR" && echo "$PWD")
+export UVENV_DIR
+

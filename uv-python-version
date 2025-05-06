@@ -1,0 +1,36 @@
+#!/bin/bash
+
+source "$(dirname "$0")/uvenv-functions.sh"
+
+function get_active_version() {
+    # Check for .uvenv file first
+    local uvenv_file
+    if uvenv_file=$(find_uvenv); then
+        # Ensure UTF-8 encoding and clean whitespace
+        local version=$(cat "$uvenv_file" | iconv -f utf-8 -t utf-8 -c | tr -d '[:space:]')
+        if [[ -n "$version" ]]; then
+            echo "$version"
+            return 0
+        fi
+    fi
+
+    # Then check local override
+    if [[ -n "${UV_LOCAL_PY_VERSION}" ]]; then
+        echo "${UV_LOCAL_PY_VERSION}"
+        return 0
+    fi
+
+    # Then check global version
+    if [[ -n "${UV_PYTHON_VERSION}" ]]; then
+        echo "${UV_PYTHON_VERSION}"
+        return 0
+    fi
+
+    # Fallback to latest
+    get_latest_version
+}
+
+# When run directly, output active version
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    get_active_version
+fi
